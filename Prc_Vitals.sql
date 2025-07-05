@@ -1,20 +1,22 @@
-IF OBJECT_ID('dbo.Prc_ResponsibleParties') IS NOT NULL
-    DROP PROCEDURE dbo.Prc_ResponsibleParties
+IF OBJECT_ID('dbo.Prc_Vitals') IS NOT NULL
+    DROP PROCEDURE dbo.Prc_Vitals
 GO
 
-CREATE PROCEDURE dbo.Prc_ResponsibleParties
+CREATE PROCEDURE dbo.Prc_Vitals
 (
-    @ResponsibleId           UNIQUEIDENTIFIER = NULL,
-    @PatientId               UNIQUEIDENTIFIER = NULL,
-    @Name                    VARCHAR(100) = NULL,
-    @DOB                     DATE = NULL,
-    @RelationshipToInsured   VARCHAR(50) = NULL,
-    @PreferredPhone          VARCHAR(20) = NULL,
-    @Operation               VARCHAR(20) = NULL
+    @VitalsId         UNIQUEIDENTIFIER = NULL,
+    @PatientId        UNIQUEIDENTIFIER = NULL,
+    @HeightInches     FLOAT = NULL,
+    @WeightLbs        FLOAT = NULL,
+    @ShoeSize         VARCHAR(10) = NULL,
+    @GenderShoe       VARCHAR(10) = NULL,
+    @HemoglobinA1C    FLOAT = NULL,
+    @A1CDate          DATE = NULL,
+    @Operation        VARCHAR(20) = NULL
 )
 /******************************************************************************************************************************************                 
 *              
-*  Procedure Name........: dbo.Prc_ResponsibleParties        
+*  Procedure Name........: dbo.Prc_Vitals        
 *  Input Parameters......: none              
 *  Output Parameters.....: none              
 *  Description...........: This stored procedure is process the personal data That will be use for API GET, POST, PUT, DELETE this is for my 
@@ -32,7 +34,7 @@ CREATE PROCEDURE dbo.Prc_ResponsibleParties
    
 AS
 BEGIN
-    PRINT 'Execution of dbo.Prc_ResponsibleParties starts at ' + CONVERT(VARCHAR(20), GETDATE(), 20)
+    PRINT 'Execution of dbo.Prc_Vitals starts at ' + CONVERT(VARCHAR(20), GETDATE(), 20)
     SET NOCOUNT ON;
 
     /*------------------------------
@@ -41,13 +43,15 @@ BEGIN
     IF @Operation = 'GETALL'
     BEGIN
         SELECT 
-            ResponsibleId,
+            VitalsId,
             PatientId,
-            Name,
-            DOB,
-            RelationshipToInsured,
-            PreferredPhone
-        FROM ResponsibleParties
+            HeightInches,
+            WeightLbs,
+            ShoeSize,
+            GenderShoe,
+            HemoglobinA1C,
+            A1CDate
+        FROM Vitals
     END
 
     /*------------------------------
@@ -56,14 +60,16 @@ BEGIN
     ELSE IF @Operation = 'GETBYID'
     BEGIN
         SELECT 
-            ResponsibleId,
+            VitalsId,
             PatientId,
-            Name,
-            DOB,
-            RelationshipToInsured,
-            PreferredPhone
-        FROM ResponsibleParties
-        WHERE ResponsibleId = @ResponsibleId
+            HeightInches,
+            WeightLbs,
+            ShoeSize,
+            GenderShoe,
+            HemoglobinA1C,
+            A1CDate
+        FROM Vitals
+        WHERE VitalsId = @VitalsId
     END
 
     /*------------------------------
@@ -71,26 +77,30 @@ BEGIN
     --------------------------------*/
     ELSE IF @Operation = 'INSERT'
     BEGIN
-        INSERT INTO ResponsibleParties (
-            ResponsibleId,
+        INSERT INTO Vitals (
+            VitalsId,
             PatientId,
-            Name,
-            DOB,
-            RelationshipToInsured,
-            PreferredPhone
+            HeightInches,
+            WeightLbs,
+            ShoeSize,
+            GenderShoe,
+            HemoglobinA1C,
+            A1CDate
         )
         VALUES (
-            ISNULL(@ResponsibleId, NEWID()),
+            ISNULL(@VitalsId, NEWID()),
             @PatientId,
-            @Name,
-            @DOB,
-            @RelationshipToInsured,
-            @PreferredPhone
+            @HeightInches,
+            @WeightLbs,
+            @ShoeSize,
+            @GenderShoe,
+            @HemoglobinA1C,
+            @A1CDate
         )
 
         SELECT TOP 1 *
-        FROM ResponsibleParties
-        ORDER BY ResponsibleId DESC
+        FROM Vitals
+        ORDER BY VitalsId DESC
     END
 
     /*------------------------------
@@ -98,17 +108,19 @@ BEGIN
     --------------------------------*/
     ELSE IF @Operation = 'UPDATE'
     BEGIN
-        UPDATE ResponsibleParties
+        UPDATE Vitals
         SET
-            PatientId = @PatientId,
-            Name = @Name,
-            DOB = @DOB,
-            RelationshipToInsured = @RelationshipToInsured,
-            PreferredPhone = @PreferredPhone
-        WHERE ResponsibleId = @ResponsibleId
+            PatientId       = @PatientId,
+            HeightInches    = @HeightInches,
+            WeightLbs       = @WeightLbs,
+            ShoeSize        = @ShoeSize,
+            GenderShoe      = @GenderShoe,
+            HemoglobinA1C   = @HemoglobinA1C,
+            A1CDate         = @A1CDate
+        WHERE VitalsId = @VitalsId
 
-        SELECT * FROM ResponsibleParties
-        WHERE ResponsibleId = @ResponsibleId
+        SELECT * FROM Vitals
+        WHERE VitalsId = @VitalsId
     END
 
     /*------------------------------
@@ -116,8 +128,8 @@ BEGIN
     --------------------------------*/
     ELSE IF @Operation = 'DELETE'
     BEGIN
-        DELETE FROM ResponsibleParties
-        WHERE ResponsibleId = @ResponsibleId
+        DELETE FROM Vitals
+        WHERE VitalsId = @VitalsId
 
         SELECT 'Delete successful' AS Message
     END

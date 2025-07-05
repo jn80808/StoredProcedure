@@ -1,20 +1,18 @@
-IF OBJECT_ID('dbo.Prc_ResponsibleParties') IS NOT NULL
-    DROP PROCEDURE dbo.Prc_ResponsibleParties
+IF OBJECT_ID('dbo.Prc_Allergies') IS NOT NULL
+    DROP PROCEDURE dbo.Prc_Allergies
 GO
 
-CREATE PROCEDURE dbo.Prc_ResponsibleParties
+CREATE PROCEDURE dbo.Prc_Allergies
 (
-    @ResponsibleId           UNIQUEIDENTIFIER = NULL,
-    @PatientId               UNIQUEIDENTIFIER = NULL,
-    @Name                    VARCHAR(100) = NULL,
-    @DOB                     DATE = NULL,
-    @RelationshipToInsured   VARCHAR(50) = NULL,
-    @PreferredPhone          VARCHAR(20) = NULL,
-    @Operation               VARCHAR(20) = NULL
+    @AllergyId          UNIQUEIDENTIFIER = NULL,
+    @PatientId          UNIQUEIDENTIFIER = NULL,
+    @AllergyType        VARCHAR(100) = NULL,
+    @OtherAllergyNotes  TEXT = NULL,
+    @Operation          VARCHAR(20) = NULL
 )
 /******************************************************************************************************************************************                 
 *              
-*  Procedure Name........: dbo.Prc_ResponsibleParties        
+*  Procedure Name........: dbo.Prc_Allergies        
 *  Input Parameters......: none              
 *  Output Parameters.....: none              
 *  Description...........: This stored procedure is process the personal data That will be use for API GET, POST, PUT, DELETE this is for my 
@@ -25,14 +23,14 @@ CREATE PROCEDURE dbo.Prc_ResponsibleParties
 *------------------------------------------------------------------------------------------------------------------------------------------             
 *	Serial No:		Date:			Release No:			Modified By:       Description:              
 *------------------------------------------------------------------------------------------------------------------------------------------             
-*	1				07/01/2025		R1					Joy Ng				Initial Creation 
+*	1				07/03/2025		R1					Joy Ng				Initial Creation 
 *	2    
 *------------------------------------------------------------------------------------------------------------------------------------------                 
 *******************************************************************************************************************************************/   
    
 AS
 BEGIN
-    PRINT 'Execution of dbo.Prc_ResponsibleParties starts at ' + CONVERT(VARCHAR(20), GETDATE(), 20)
+    PRINT 'Execution of dbo.Prc_Allergies starts at ' + CONVERT(VARCHAR(20), GETDATE(), 20)
     SET NOCOUNT ON;
 
     /*------------------------------
@@ -41,13 +39,11 @@ BEGIN
     IF @Operation = 'GETALL'
     BEGIN
         SELECT 
-            ResponsibleId,
+            AllergyId,
             PatientId,
-            Name,
-            DOB,
-            RelationshipToInsured,
-            PreferredPhone
-        FROM ResponsibleParties
+            AllergyType,
+            OtherAllergyNotes
+        FROM Allergies
     END
 
     /*------------------------------
@@ -56,14 +52,12 @@ BEGIN
     ELSE IF @Operation = 'GETBYID'
     BEGIN
         SELECT 
-            ResponsibleId,
+            AllergyId,
             PatientId,
-            Name,
-            DOB,
-            RelationshipToInsured,
-            PreferredPhone
-        FROM ResponsibleParties
-        WHERE ResponsibleId = @ResponsibleId
+            AllergyType,
+            OtherAllergyNotes
+        FROM Allergies
+        WHERE AllergyId = @AllergyId
     END
 
     /*------------------------------
@@ -71,26 +65,22 @@ BEGIN
     --------------------------------*/
     ELSE IF @Operation = 'INSERT'
     BEGIN
-        INSERT INTO ResponsibleParties (
-            ResponsibleId,
+        INSERT INTO Allergies (
+            AllergyId,
             PatientId,
-            Name,
-            DOB,
-            RelationshipToInsured,
-            PreferredPhone
+            AllergyType,
+            OtherAllergyNotes
         )
         VALUES (
-            ISNULL(@ResponsibleId, NEWID()),
+            ISNULL(@AllergyId, NEWID()),
             @PatientId,
-            @Name,
-            @DOB,
-            @RelationshipToInsured,
-            @PreferredPhone
+            @AllergyType,
+            @OtherAllergyNotes
         )
 
         SELECT TOP 1 *
-        FROM ResponsibleParties
-        ORDER BY ResponsibleId DESC
+        FROM Allergies
+        ORDER BY AllergyId DESC
     END
 
     /*------------------------------
@@ -98,17 +88,15 @@ BEGIN
     --------------------------------*/
     ELSE IF @Operation = 'UPDATE'
     BEGIN
-        UPDATE ResponsibleParties
+        UPDATE Allergies
         SET
-            PatientId = @PatientId,
-            Name = @Name,
-            DOB = @DOB,
-            RelationshipToInsured = @RelationshipToInsured,
-            PreferredPhone = @PreferredPhone
-        WHERE ResponsibleId = @ResponsibleId
+            PatientId         = @PatientId,
+            AllergyType       = @AllergyType,
+            OtherAllergyNotes = @OtherAllergyNotes
+        WHERE AllergyId = @AllergyId
 
-        SELECT * FROM ResponsibleParties
-        WHERE ResponsibleId = @ResponsibleId
+        SELECT * FROM Allergies
+        WHERE AllergyId = @AllergyId
     END
 
     /*------------------------------
@@ -116,8 +104,8 @@ BEGIN
     --------------------------------*/
     ELSE IF @Operation = 'DELETE'
     BEGIN
-        DELETE FROM ResponsibleParties
-        WHERE ResponsibleId = @ResponsibleId
+        DELETE FROM Allergies
+        WHERE AllergyId = @AllergyId
 
         SELECT 'Delete successful' AS Message
     END
