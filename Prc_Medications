@@ -1,0 +1,133 @@
+IF OBJECT_ID('dbo.Prc_Medications') IS NOT NULL
+    DROP PROCEDURE dbo.Prc_Medications
+GO
+
+CREATE PROCEDURE dbo.Prc_Medications
+(
+    @MedicationId             UNIQUEIDENTIFIER = NULL,
+    @PatientId                UNIQUEIDENTIFIER = NULL,
+    @MedicationName           VARCHAR(100) = NULL,
+    @Dose                     VARCHAR(50) = NULL,
+    @Frequency                VARCHAR(50) = NULL,
+    @TakingOralContraceptives BIT = NULL,
+    @Operation                VARCHAR(20) = NULL
+)
+/******************************************************************************************************************************************                 
+*              
+*  Procedure Name........: dbo.Prc_Medications        
+*  Input Parameters......: none              
+*  Output Parameters.....: none              
+*  Description...........: This stored procedure is process the personal data That will be use for API GET, POST, PUT, DELETE this is for my 
+*							Peronal Project to use in Mendix App
+*  Called By Procedure(s): none            
+*  This Procedure Calls..: none              
+*                     
+*------------------------------------------------------------------------------------------------------------------------------------------             
+*	Serial No:		Date:			Release No:			Modified By:       Description:              
+*------------------------------------------------------------------------------------------------------------------------------------------             
+*	1				07/01/2025		R1					Joy Ng				Initial Creation 
+*	2    
+*------------------------------------------------------------------------------------------------------------------------------------------                 
+*******************************************************************************************************************************************/   
+ 
+AS
+BEGIN
+    PRINT 'Execution of dbo.Prc_Medications starts at ' + CONVERT(VARCHAR(20), GETDATE(), 20)
+    SET NOCOUNT ON;
+
+    /*------------------------------
+        ---- OPERATION GET ALL ----
+    --------------------------------*/
+    IF @Operation = 'GETALL'
+    BEGIN
+        SELECT 
+            MedicationId,
+            PatientId,
+            MedicationName,
+            Dose,
+            Frequency,
+            TakingOralContraceptives
+        FROM Medications
+    END
+
+    /*------------------------------
+        ---- OPERATION GETBYID ----
+    --------------------------------*/
+    ELSE IF @Operation = 'GETBYID'
+    BEGIN
+        SELECT 
+            MedicationId,
+            PatientId,
+            MedicationName,
+            Dose,
+            Frequency,
+            TakingOralContraceptives
+        FROM Medications
+        WHERE MedicationId = @MedicationId
+    END
+
+    /*------------------------------
+        ---- OPERATION INSERT ----
+    --------------------------------*/
+    ELSE IF @Operation = 'INSERT'
+    BEGIN
+        INSERT INTO Medications (
+            MedicationId,
+            PatientId,
+            MedicationName,
+            Dose,
+            Frequency,
+            TakingOralContraceptives
+        )
+        VALUES (
+            ISNULL(@MedicationId, NEWID()),
+            @PatientId,
+            @MedicationName,
+            @Dose,
+            @Frequency,
+            @TakingOralContraceptives
+        )
+
+        SELECT TOP 1 *
+        FROM Medications
+        ORDER BY MedicationId DESC
+    END
+
+    /*------------------------------
+        ---- OPERATION UPDATE ----
+    --------------------------------*/
+    ELSE IF @Operation = 'UPDATE'
+    BEGIN
+        UPDATE Medications
+        SET
+            PatientId                = @PatientId,
+            MedicationName           = @MedicationName,
+            Dose                     = @Dose,
+            Frequency                = @Frequency,
+            TakingOralContraceptives = @TakingOralContraceptives
+        WHERE MedicationId = @MedicationId
+
+        SELECT * FROM Medications
+        WHERE MedicationId = @MedicationId
+    END
+
+    /*------------------------------
+        ---- OPERATION DELETE ----
+    --------------------------------*/
+    ELSE IF @Operation = 'DELETE'
+    BEGIN
+        DELETE FROM Medications
+        WHERE MedicationId = @MedicationId
+
+        SELECT 'Delete successful' AS Message
+    END
+
+    /*------------------------------
+        ---- INVALID OPERATION ----
+    --------------------------------*/
+    ELSE
+    BEGIN
+        SELECT 'Invalid Operation' AS Message
+    END
+END
+GO
