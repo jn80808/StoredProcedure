@@ -221,7 +221,258 @@ ADD Operation VARCHAR(255) NULL;
 
 EXEC sp_rename 'Patients', 'Tbl_Patients';
 
+EXEC Prc_PersonalData 
+@OPERATION ='GENERATEID'
 
 
 ALTER TABLE Tbl_Patients
 ADD CreatedAt DATETIME DEFAULT GETDATE();
+
+
+
+ALTER TABLE Tbl_Patients
+ADD PatientIdNumber INT NULL;
+
+
+ALTER TABLE Tbl_Patients
+DROP COLUMN PatientIdNumber;
+
+
+ALTER TABLE Tbl_Patients
+ADD PatientIdNumber VARCHAR(250) NULL;
+
+
+
+
+EXEC Prc_PersonalData 
+@OPERATION ='GENERATEID'
+
+SELECT PatientIdNumber,* FROM  Tbl_Patients
+
+
+UPDATE Tbl_Patients
+SET PatientIdNumber = 'PTN-00000000005' 
+WHERE PatientId ='F20BE3C7-0FC7-45C2-8C35-FF4E0409A139'
+
+
+/*------------------------------------------------ */
+/*---------------- FOR DROP DOWN ---------------- */
+/*------------------------------------------------ */
+
+
+
+/*---------------- 1. FollowUpReason Lookup Table ---------------- */
+
+
+CREATE TABLE Lkp_FollowUpReason (
+    FollowUpReasonID INT IDENTITY(1,1) PRIMARY KEY,
+    FollowUpReason NVARCHAR(255) NOT NULL
+);
+
+INSERT INTO Lkp_FollowUpReason (FollowUpReason)
+VALUES
+('Post-surgery check-up'),
+('Chronic condition monitoring'),
+('Medication adjustment'),
+('Lab test review'),
+('Therapy progress evaluation'),
+('New symptom follow-up'),
+('Annual physical review'),
+('Specialist referral follow-up');
+
+
+/*---------------- 2. SymptomsChange ---------------- */
+
+
+CREATE TABLE Lkp_SymptomsChange (
+    SymptomsChangeID INT IDENTITY(1,1) PRIMARY KEY,
+    SymptomsChange NVARCHAR(255) NOT NULL
+);
+
+INSERT INTO Lkp_SymptomsChange (SymptomsChange)
+VALUES
+('Improved mobility'),
+('Reduced pain'),
+('No change in symptoms'),
+('Increased fatigue'),
+('Worsened breathing'),
+('Better mood'),
+('Headache resolved'),
+('Swelling reduced');
+
+
+/*---------------- 3. PrescribedMedications ---------------- */
+
+CREATE TABLE Lkp_PrescribedMedications (
+    MedicationID INT IDENTITY(1,1) PRIMARY KEY,
+    Medication NVARCHAR(255) NOT NULL
+);
+
+INSERT INTO Lkp_PrescribedMedications (Medication)
+VALUES
+('Ibuprofen 400mg as needed'),
+('Metformin 500mg twice daily'),
+('Amlodipine 5mg daily'),
+('Salbutamol inhaler'),
+('Paracetamol 500mg every 6 hours'),
+('Cetirizine at night'),
+('No medications prescribed');
+
+
+
+
+/*---------------- 4. TestsOrdered ---------------- */
+
+CREATE TABLE Lkp_TestsOrdered (
+    TestID INT IDENTITY(1,1) PRIMARY KEY,
+    TestName NVARCHAR(255) NOT NULL
+);
+
+INSERT INTO Lkp_TestsOrdered (TestName)
+VALUES
+('Blood test'),
+('Chest X-ray'),
+('MRI Brain'),
+('CT Scan Abdomen'),
+('Spirometry'),
+('Ultrasound Pelvis'),
+('ECG - Electrocardiogram'),
+('None');
+
+
+/*---------------- 5. TreatmentResponse ---------------- */
+
+
+CREATE TABLE Lkp_TreatmentResponse (
+    ResponseID INT IDENTITY(1,1) PRIMARY KEY,
+    TreatmentResponse NVARCHAR(255) NOT NULL
+);
+
+INSERT INTO Lkp_TreatmentResponse (TreatmentResponse)
+VALUES
+('Significant improvement'),
+('Partial improvement'),
+('No improvement'),
+('Symptoms worsened'),
+('Stable condition'),
+('Resolved completely');
+
+
+
+/*---------------- 6. SideEffectsReported ---------------- */
+
+
+CREATE TABLE Lkp_SideEffectsReported (
+    SideEffectID INT IDENTITY(1,1) PRIMARY KEY,
+    SideEffect NVARCHAR(255) NOT NULL
+);
+
+INSERT INTO Lkp_SideEffectsReported (SideEffect)
+VALUES
+('Mild dizziness'),
+('Nausea'),
+('Dry mouth'),
+('Fatigue'),
+('Stomach irritation'),
+('Rash'),
+('No side effects reported');
+
+
+/*---------------- 7. LifestyleChangesSuggested ---------------- */
+
+
+CREATE TABLE Lkp_LifestyleChanges (
+    LifestyleChangeID INT IDENTITY(1,1) PRIMARY KEY,
+    LifestyleChange NVARCHAR(255) NOT NULL
+);
+
+INSERT INTO Lkp_LifestyleChanges (LifestyleChange)
+VALUES
+('Low-sodium diet'),
+('High-protein diet'),
+('Daily exercise'),
+('Avoid caffeine'),
+('Mindfulness meditation'),
+('Quit smoking'),
+('Increase hydration');
+
+
+/*---------------- 8. ReferralMade ---------------- */
+
+
+CREATE TABLE Lkp_ReferralMade (
+    ReferralID INT IDENTITY(1,1) PRIMARY KEY,
+    Referral NVARCHAR(255) NOT NULL
+);
+
+INSERT INTO Lkp_ReferralMade (Referral)
+VALUES
+('Physiotherapist'),
+('Pulmonologist'),
+('Cardiologist'),
+('Psychologist'),
+('Endocrinologist'),
+('Orthopedic surgeon'),
+('None');
+
+
+
+/*---------------- 9. ChronicConditionStatus ---------------- */
+
+CREATE TABLE Lkp_ChronicConditionStatus (
+    StatusID INT IDENTITY(1,1) PRIMARY KEY,
+    Status NVARCHAR(255) NOT NULL
+);
+
+INSERT INTO Lkp_ChronicConditionStatus (Status)
+VALUES
+('Stable'),
+('Improving'),
+('Deteriorating'),
+('Under control'),
+('Newly diagnosed'),
+('In remission');
+
+
+/*---------------- 10. RequiresDiagnosticCheck ---------------- */
+
+CREATE TABLE Lkp_RequiresDiagnosticCheck (
+    RequiresCheckID INT IDENTITY(1,1) PRIMARY KEY,
+    RequiresCheck NVARCHAR(10) NOT NULL
+);
+
+INSERT INTO Lkp_RequiresDiagnosticCheck (RequiresCheck)
+VALUES
+('Yes'),
+('No');
+
+
+/*---------------- 11. DiagnosticCheckDetails ---------------- */
+
+
+CREATE TABLE Lkp_DiagnosticCheckDetails (
+    DiagnosticID INT IDENTITY(1,1) PRIMARY KEY,
+    DiagnosticCheckDetails NVARCHAR(255) NULL
+);
+
+INSERT INTO Lkp_DiagnosticCheckDetails (DiagnosticCheckDetails)
+VALUES
+('X-ray (Chest)'),
+('MRI Brain'),
+('Blood Test'),
+('ICG - Heart Check'),
+('Ultrasound Abdomen'),
+('CT Scan (Head)'),
+('Urinalysis'),
+('ECG - Electrocardiogram'),
+('Liver Function Test'),
+('Spirometry - Lung Function'),
+('Mammogram'),
+('Allergy Skin Test'),
+('Colonoscopy'),
+('Eye Examination - Fundoscopy'),
+(NULL);
+
+
+
+EXEC dbo.Prc_PersonalData @Operation = 'GETALL';
