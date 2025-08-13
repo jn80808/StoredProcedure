@@ -437,15 +437,97 @@ END
   END   
 
 /*---------------------------------------------
- ---- OPERATION GET DiagnosticCheckDetails----  
+ ---- OPERATION GET SymptomsChange----  
 ----------------------------------------------*/  
   
- IF @Operation = 'DiagnosticCheckDetails'  
+ IF @Operation = 'SymptomsChange'  
   BEGIN   
-   SELECT   * From Lkp_DiagnosticCheckDetails;
+   SELECT   * From Lkp_SymptomsChange;
+  END   
+
+/*---------------------------------------------
+ ---- OPERATION GET PrescribedMedications ----  
+----------------------------------------------*/  
+  
+ IF @Operation = 'PrescribedMedications'  
+  BEGIN   
+   SELECT   * From Lkp_PrescribedMedications;
+  END   
+
+/*---------------------------------------------
+ ---- OPERATION GET TestsOrdered ----  
+----------------------------------------------*/  
+  
+ IF @Operation = 'TestsOrdered'  
+  BEGIN   
+   SELECT   * From Lkp_TestsOrdered;
+  END   
+
+/*---------------------------------------------
+ ---- OPERATION GET TreatmentResponse ----  
+----------------------------------------------*/  
+  
+ IF @Operation = 'TreatmentResponse'  
+  BEGIN   
+   SELECT   * From Lkp_TreatmentResponse;
   END   
 
 
+/*---------------------------------------------
+ ---- OPERATION GET SideEffectsReported ----  
+----------------------------------------------*/  
+  
+ IF @Operation = 'SideEffectsReported'  
+  BEGIN   
+   SELECT   * From Lkp_SideEffectsReported;
+  END   
+
+
+/*--------------------------------------------------
+ ---- OPERATION GET LifestyleChangesSuggested ----  
+---------------------------------------------------*/  
+  
+ IF @Operation = 'LifestyleChangesSuggested'  
+  BEGIN   
+   SELECT   * From Lkp_LifestyleChanges ;
+  END   
+
+
+/*--------------------------------------------------
+ ---- OPERATION GET ReferralMade ----  
+---------------------------------------------------*/  
+  
+ IF @Operation = 'ReferralMade'  
+  BEGIN   
+   SELECT   * From Lkp_ReferralMade ;
+  END   
+
+/*--------------------------------------------------
+ ---- OPERATION GET ChronicConditionStatus ----  
+---------------------------------------------------*/  
+  
+ IF @Operation = 'ChronicConditionStatus'  
+  BEGIN   
+   SELECT   * From Lkp_ChronicConditionStatus ;
+  END   
+
+/*--------------------------------------------------
+ ---- OPERATION GET RequiresDiagnosticCheck ----  
+---------------------------------------------------*/  
+  
+ IF @Operation = 'RequiresDiagnosticCheck'  
+  BEGIN   
+   SELECT   * From Lkp_RequiresDiagnosticCheck ;
+  END   
+
+/*--------------------------------------------------
+ ---- OPERATION GET DiagnosticCheckDetails ----  
+---------------------------------------------------*/  
+  
+ IF @Operation = 'DiagnosticCheckDetails'  
+  BEGIN   
+   SELECT   * From Lkp_DiagnosticCheckDetails ;
+  END   
 
 
 /*------------------------------  
