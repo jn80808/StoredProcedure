@@ -423,6 +423,31 @@ BEGIN
     SELECT 'Delete successful' AS Message;  
 END  
 
+/*-----------------------------*/
+/*-------- DROPDWON  -------- */
+/*---------------------------*/
+
+/*---------------------------------------------
+ ---- OPERATION GET FollowUpReason ----  
+----------------------------------------------*/  
+  
+ IF @Operation = 'FollowUpReason'  
+  BEGIN   
+   SELECT   * From Lkp_FollowUpReason;
+  END   
+
+/*---------------------------------------------
+ ---- OPERATION GET DiagnosticCheckDetails----  
+----------------------------------------------*/  
+  
+ IF @Operation = 'DiagnosticCheckDetails'  
+  BEGIN   
+   SELECT   * From Lkp_DiagnosticCheckDetails;
+  END   
+
+
+
+
 /*------------------------------  
  ---- Invalid Operation   ----  
 --------------------------------*/  
