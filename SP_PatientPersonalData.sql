@@ -29,7 +29,7 @@ CREATE PROCEDURE [dbo].[Prc_PersonalData]
  @BillingCity   VARCHAR(50) = NULL,  
  @BillingState   VARCHAR(50) = NULL,  
  @BillingZip    VARCHAR(20) = NULL,  
- @Operation    VARCHAR(20) = NULL,  
+ @Operation    VARCHAR(120) = NULL,  
  @CreatedAt    DATETIME =  NULL,  
  @PatientId    UNIQUEIDENTIFIER = NULL  ,
  @PatientIdNumber  VARCHAR(250) = NULL ,
@@ -175,6 +175,10 @@ END
   
  ELSE IF @Operation = 'INSERT'  
   BEGIN   
+
+  IF @PatientId IS NULL OR @PatientId = ''
+        SET @PatientId = NEWID();
+
    INSERT INTO Tbl_Patients  
    (  
      PatientId  
@@ -207,7 +211,7 @@ END
     ,CreatedAt  
     )  
     VALUES(  
-     ISNULL(@PatientId, NEWID())  
+     @PatientId  
     ,@FirstName  
     ,@MiddleName  
     ,@LastName  
@@ -442,7 +446,7 @@ END
   
  IF @Operation = 'SymptomsChange'  
   BEGIN   
-   SELECT   * From Lkp_SymptomsChange;
+   SELECT   SymptomsChange  From Lkp_SymptomsChange;
   END   
 
 /*---------------------------------------------
@@ -451,7 +455,9 @@ END
   
  IF @Operation = 'PrescribedMedications'  
   BEGIN   
-   SELECT   * From Lkp_PrescribedMedications;
+
+   SELECT Medication From Lkp_PrescribedMedications;
+
   END   
 
 /*---------------------------------------------
@@ -460,7 +466,7 @@ END
   
  IF @Operation = 'TestsOrdered'  
   BEGIN   
-   SELECT   * From Lkp_TestsOrdered;
+   SELECT TestName From Lkp_TestsOrdered;
   END   
 
 /*---------------------------------------------
@@ -469,9 +475,8 @@ END
   
  IF @Operation = 'TreatmentResponse'  
   BEGIN   
-   SELECT   * From Lkp_TreatmentResponse;
+   SELECT TreatmentResponse From Lkp_TreatmentResponse;
   END   
-
 
 /*---------------------------------------------
  ---- OPERATION GET SideEffectsReported ----  
@@ -479,7 +484,7 @@ END
   
  IF @Operation = 'SideEffectsReported'  
   BEGIN   
-   SELECT   * From Lkp_SideEffectsReported;
+   SELECT SideEffect  From Lkp_SideEffectsReported;
   END   
 
 
@@ -489,9 +494,8 @@ END
   
  IF @Operation = 'LifestyleChangesSuggested'  
   BEGIN   
-   SELECT   * From Lkp_LifestyleChanges ;
+   SELECT LifestyleChange From Lkp_LifestyleChanges ;
   END   
-
 
 /*--------------------------------------------------
  ---- OPERATION GET ReferralMade ----  
@@ -499,7 +503,7 @@ END
   
  IF @Operation = 'ReferralMade'  
   BEGIN   
-   SELECT   * From Lkp_ReferralMade ;
+   SELECT Referral From Lkp_ReferralMade ;
   END   
 
 /*--------------------------------------------------
@@ -508,7 +512,7 @@ END
   
  IF @Operation = 'ChronicConditionStatus'  
   BEGIN   
-   SELECT   * From Lkp_ChronicConditionStatus ;
+   SELECT [Status] From Lkp_ChronicConditionStatus ;
   END   
 
 /*--------------------------------------------------
@@ -517,7 +521,7 @@ END
   
  IF @Operation = 'RequiresDiagnosticCheck'  
   BEGIN   
-   SELECT   * From Lkp_RequiresDiagnosticCheck ;
+   SELECT RequiresCheck From Lkp_RequiresDiagnosticCheck ;
   END   
 
 /*--------------------------------------------------
@@ -526,7 +530,71 @@ END
   
  IF @Operation = 'DiagnosticCheckDetails'  
   BEGIN   
-   SELECT   * From Lkp_DiagnosticCheckDetails ;
+   SELECT ISNULL(DiagnosticCheckDetails, '') AS DiagnosticCheckDetails
+	FROM Lkp_DiagnosticCheckDetails;
+
+  END   
+
+
+/*--------------------------------------------------
+ ---- OPERATION GET Sex Gender ----  
+---------------------------------------------------*/ 
+
+
+ IF @Operation = 'SexGender'  
+  BEGIN   
+
+   SELECT SexGender FROM SexGender;
+
+  END   
+
+/*--------------------------------------------------
+ ---- OPERATION GET MaritalStatus ----  
+---------------------------------------------------*/ 
+
+
+ IF @Operation = 'MaritalStatus'  
+  BEGIN   
+
+   SELECT MaritalStatus FROM MaritalStatus;
+
+  END   
+
+/*--------------------------------------------------
+ ---- OPERATION GET Ethnicity ----  
+---------------------------------------------------*/ 
+
+
+ IF @Operation = 'Ethnicity'  
+  BEGIN   
+
+   SELECT Ethnicity FROM Ethnicity;
+
+  END   
+
+
+/*--------------------------------------------------
+ ---- OPERATION GET PreferredContact ----  
+---------------------------------------------------*/ 
+
+
+ IF @Operation = 'PreferredContact'  
+  BEGIN   
+
+   SELECT PreferredContact FROM PreferredContact;
+
+  END   
+
+/*--------------------------------------------------
+ ---- OPERATION GET PreferredPaymentMethod ----  
+---------------------------------------------------*/ 
+
+
+ IF @Operation = 'PreferredPaymentMethod'  
+  BEGIN   
+
+   SELECT PreferredPaymentMethod FROM PreferredPaymentMethod;
+
   END   
 
 
