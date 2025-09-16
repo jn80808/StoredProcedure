@@ -40,7 +40,8 @@ CREATE PROCEDURE [dbo].[Prc_PersonalData]
  @Notes  VARCHAR(755) = NULL ,
  @VisitLoop VARCHAR(755) = NULL ,
  @LoopCount  INT = NULL,
- @ConsultationId UNIQUEIDENTIFIER = NULL
+ @ConsultationId UNIQUEIDENTIFIER = NULL,
+ @CustomPatientId  VARCHAR(250) = NULL 
 
 
 )  
@@ -68,8 +69,12 @@ BEGIN
   
  PRINT 'Execution of dbo.Prc_PersonalData  starts at ' + CONVERT(VARCHAR(20),GETDATE(),20)  
  SET NOCOUNT ON;  
+ 
+ 
+
   
-  
+
+
 /*------------------------------  
  ---- OPERATION GET ALL ----  
 --------------------------------*/  
@@ -108,6 +113,16 @@ BEGIN
    From Tbl_Patients   
   END   
  
+/*------------------------------  
+ ---- OPERATION NEWID ----  
+--------------------------------*/  
+ELSE IF @Operation = 'GETNewID'  
+  BEGIN   
+	SELECT NEWID();
+  END   
+
+
+
 /*------------------------------  
  ---- OPERATION GENERATEID  ----  
 --------------------------------*/  
@@ -167,7 +182,89 @@ END
     ,CreatedAt  
    From Tbl_Patients WHERE PatientId = @PatientId  
   END   
+
+/*------------------------------  
+ ---- OPERATION INSERT  ----  
+--------------------------------*/  
   
+  
+ ELSE IF @Operation = 'INSERT1DT'  
+  BEGIN   
+
+  IF @PatientId IS NULL OR @PatientId = ''
+        SET @PatientId = NEWID();
+
+   INSERT INTO Tbl_Patients  
+   (  
+     PatientId  
+    ,FirstName  
+    ,MiddleName  
+    ,LastName  
+    ,PreferredName  
+    ,BirthDate  
+    ,Age  
+    ,Sex  
+    ,SocialSecurityNumber  
+    ,PreferredLanguage  
+    ,Ethnicity  
+    ,MaritalStatus  
+    ,Occupation  
+    ,Employer  
+    ,Email  
+    ,PhoneHome  
+    ,PhoneWork  
+    ,PhoneCell  
+    ,PreferredContact  
+    ,AddressStreet  
+    ,AddressCity  
+    ,AddressState  
+    ,AddressZip  
+    ,BillingStreet  
+    ,BillingCity  
+    ,BillingState  
+    ,BillingZip  
+    ,CreatedAt  
+	,CustomPatientId
+    )  
+    VALUES(  
+     @PatientId  
+    ,@FirstName  
+    ,@MiddleName  
+    ,@LastName  
+    ,@PreferredName  
+    ,@BirthDate  
+    ,@Age  
+    ,@Sex  
+    ,@SocialSecurityNumber  
+    ,@PreferredLanguage  
+    ,@Ethnicity  
+    ,@MaritalStatus  
+    ,@Occupation  
+    ,@Employer  
+    ,@Email  
+    ,@PhoneHome  
+    ,@PhoneWork  
+    ,@PhoneCell  
+    ,@PreferredContact  
+    ,@AddressStreet  
+    ,@AddressCity  
+    ,@AddressState  
+    ,@AddressZip  
+    ,@BillingStreet  
+    ,@BillingCity  
+    ,@BillingState  
+    ,@BillingZip  
+    ,GETDATE() 
+	,@CustomPatientId
+    );  
+  
+   SELECT TOP 1 *  
+   FROM Tbl_Patients  
+   ORDER BY CreatedAt DESC;  
+  
+  
+  END   
+ 
 /*------------------------------  
  ---- OPERATION INSERT  ----  
 --------------------------------*/  
