@@ -191,7 +191,7 @@ END
  ELSE IF @Operation = 'INSERT1DT'  
   BEGIN   
 
-  IF @PatientId IS NULL OR @PatientId = ''
+  IF @PatientId IS NULL 
         SET @PatientId = NEWID();
 
    INSERT INTO Tbl_Patients  
